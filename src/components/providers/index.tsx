@@ -1,3 +1,5 @@
+import { Provider as WrapBalancerProvider } from "react-wrap-balancer";
+
 import { ThemeProvider } from "./theme-provider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -8,7 +10,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
                 defaultTheme="dark"
                 disableTransitionOnChange
             >
-                {children}
+                <WrapBalancerProvider>{children}</WrapBalancerProvider>
             </ThemeProvider>
         </>
     );
