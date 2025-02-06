@@ -8,6 +8,27 @@
       "when": 1738821214428,
       "tag": "0000_flawless_dracula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738832603441,
+      "tag": "0001_absurd_timeslip",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738836853757,
+      "tag": "0002_amusing_quasimodo",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1738865799985,
+      "tag": "0003_worried_meteorite",
+      "breakpoints": true
     }
   ]
 }
