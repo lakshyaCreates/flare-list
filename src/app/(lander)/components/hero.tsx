@@ -10,7 +10,7 @@ import { NotificationBadge } from "./notification-badge";
 
 export const Hero = () => {
     return (
-        <div className="relative flex max-w-4xl flex-col items-center justify-center space-y-12 py-16 text-center">
+        <div className="relative flex max-w-4xl flex-col items-center justify-center space-y-12 py-8 text-center">
             <NotificationBadge />
             <div className="space-y-8">
                 <Balancer>
