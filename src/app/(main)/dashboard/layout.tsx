@@ -3,15 +3,15 @@ import { getCurrentUser } from "@/features/auth";
 
 export default async function DashboardLayout({
     children,
-    getStarted,
+    create,
 }: {
     children: React.ReactNode;
-    getStarted: React.ReactNode;
+    create: React.ReactNode;
 }) {
     const user = await getCurrentUser();
     const waitlists = await getUserWaitlists(user!.id);
 
-    if (waitlists.length === 0) return <>{getStarted}</>;
+    if (waitlists.length === 0) return <>{create}</>;
 
     return <>{children}</>;
 }

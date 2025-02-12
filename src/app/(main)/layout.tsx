@@ -1,12 +1,18 @@
+import { redirect } from "next/navigation";
+
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
+import { getCurrentUser } from "@/features/auth";
 import { AppSidebar, Header } from "@/features/main";
 
-export default function MainLayout({
+export default async function MainLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const user = await getCurrentUser();
+    if (!user || !user.id) redirect("/login");
+
     return (
         <SidebarProvider>
             <AppSidebar />

@@ -8,48 +8,29 @@ import {
     primaryKey,
     integer,
     index,
-    pgEnum,
+    json,
 } from "drizzle-orm/pg-core";
 
-const fontWeights = pgEnum("fontWeights", [
-    "light",
-    "normal",
-    "medium",
-    "semibold",
-    "bold",
-    "extrabold",
-]);
+type FontWeight =
+    | "light"
+    | "normal"
+    | "medium"
+    | "semibold"
+    | "bold"
+    | "extrabold";
 
-const showcaseType = pgEnum("showcaseType", ["disabled", "video", "image"]);
-const logoType = pgEnum("logoType", ["text", "image"]);
-
-export const preferences = pgTable("preference", {
-    id: text("id")
-        .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
-    waitlistId: text("waitlistId")
-        .notNull()
-        .references(() => waitlists.id, { onDelete: "cascade" }),
-
-    logoType: logoType().default("text"),
-    font: text("font").default("Bricolage Grotesque").notNull(),
-    h1Weight: fontWeights().default("extrabold"),
-    h2Weight: fontWeights().default("semibold"),
-    pWeight: fontWeights().default("normal"),
-    badge: text("badge").default("Sign up now and get 50% off at launch"),
-    headline: text("headline").default("Software that sparks your imagination"),
-    subtitle: text("subtitle").default(
-        "Unleash your creativity with our innovative software. From concept to creation, we provide the tools you need to bring your ideas to life.",
-    ),
-    cta: text("Join The Waitlist"),
-    inputPlaceholder: text("Your email"),
-    socialProof: text("Join 1234+ others waiting for the best app ever!"),
-    xUrl: text("https://x.com/yourcompany"),
-    instaUrl: text("https://instagram.com/yourusernmae"),
-    ytUrl: text("https://youtube.com/yourchannel"),
-    linkedInUrl: text("https://linkedin.com/yourusername"),
-    showcaseType: showcaseType().default("disabled"),
-});
+type PreferencesData = {
+    logoType: "text" | "image";
+    font: string;
+    h1Weight: FontWeight;
+    h2Weight: FontWeight;
+    pWeight: FontWeight;
+    badge: string;
+    headline: string;
+    subtitle: string;
+    cta: string;
+    inputPlaceholder: string;
+};
 
 export const waitlists = pgTable(
     "waitlist",
@@ -62,6 +43,7 @@ export const waitlists = pgTable(
         userId: text("userId")
             .notNull()
             .references(() => users.id, { onDelete: "cascade" }),
+        preferences: json().$type<PreferencesData>(),
     },
     (waitlist) => [
         index("waitlist_user_idx").on(waitlist.name, waitlist.userId),

@@ -1,5 +1,5 @@
 {
-  "id": "9d8b41ce-db2b-4b56-aca3-6d82156caa74",
+  "id": "52932049-1d70-4dd3-81c1-3bc28a967af4",
   "prevId": "6330b73c-70c3-4db3-af9d-7cac9735270e",
   "version": "7",
   "dialect": "postgresql",
@@ -180,155 +180,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.preference": {
-      "name": "preference",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "waitlistId": {
-          "name": "waitlistId",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "logoType": {
-          "name": "logoType",
-          "type": "logoType",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'text'"
-        },
-        "font": {
-          "name": "font",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'Bricolage Grotesque'"
-        },
-        "h1Weight": {
-          "name": "h1Weight",
-          "type": "fontWeights",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'extrabold'"
-        },
-        "h2Weight": {
-          "name": "h2Weight",
-          "type": "fontWeights",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'semibold'"
-        },
-        "pWeight": {
-          "name": "pWeight",
-          "type": "fontWeights",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'normal'"
-        },
-        "badge": {
-          "name": "badge",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'Sign up now and get 50% off at launch'"
-        },
-        "headline": {
-          "name": "headline",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'Software that sparks your imagination'"
-        },
-        "subtitle": {
-          "name": "subtitle",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'Unleash your creativity with our innovative software. From concept to creation, we provide the tools you need to bring your ideas to life.'"
-        },
-        "Join The Waitlist": {
-          "name": "Join The Waitlist",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "Your email": {
-          "name": "Your email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "Join 1234+ others waiting for the best app ever!": {
-          "name": "Join 1234+ others waiting for the best app ever!",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "https://x.com/yourcompany": {
-          "name": "https://x.com/yourcompany",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "https://instagram.com/yourusernmae": {
-          "name": "https://instagram.com/yourusernmae",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "https://youtube.com/yourchannel": {
-          "name": "https://youtube.com/yourchannel",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "https://linkedin.com/yourusername": {
-          "name": "https://linkedin.com/yourusername",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "showcaseType": {
-          "name": "showcaseType",
-          "type": "showcaseType",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'disabled'"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "preference_waitlistId_waitlist_id_fk": {
-          "name": "preference_waitlistId_waitlist_id_fk",
-          "tableFrom": "preference",
-          "tableTo": "waitlist",
-          "columnsFrom": [
-            "waitlistId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.session": {
       "name": "session",
       "schema": "",
@@ -483,6 +334,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "preferences": {
+          "name": "preferences",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {

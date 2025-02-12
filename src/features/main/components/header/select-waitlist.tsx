@@ -3,7 +3,8 @@
 import { ChevronsUpDown, PlusIcon } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,9 +30,11 @@ interface Props {
 }
 
 export const SelectWaitlist = ({ waitlists }: Props) => {
+    const pathname = usePathname();
     const router = useRouter();
 
-    const { waitlistId, setWaitlistId } = useCurrentWaitlist();
+    const { waitlistId, setWaitlistId, newState, setNewState } =
+        useCurrentWaitlist();
 
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState("");
@@ -51,11 +54,23 @@ export const SelectWaitlist = ({ waitlists }: Props) => {
     }, [value]);
 
     useEffect(() => {
-        const waitlistName = waitlists.find((w) => w.id === waitlistId)?.name;
-        if (waitlistName) {
-            setValue(waitlistName);
+        if (pathname !== "/dashboard/create") {
+            const waitlistName = waitlists.find(
+                (w) => w.id === waitlistId,
+            )?.name;
+            if (waitlistName) {
+                setValue(waitlistName);
+            }
         }
-    }, [waitlistId]);
+    }, [waitlistId, pathname]);
+
+    useEffect(() => {
+        const name = waitlists.find((w) => w.id === waitlistId)?.name;
+
+        if (name) setValue(name);
+        setNewState(false);
+        router.push(`/dashboard/${waitlistId}`);
+    }, [newState]);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -76,10 +91,12 @@ export const SelectWaitlist = ({ waitlists }: Props) => {
                     <CommandList>
                         <CommandEmpty>No waitlist found.</CommandEmpty>
                         <CommandGroup>
-                            <CommandItem>
-                                <PlusIcon />
-                                Create a new waitlist
-                            </CommandItem>
+                            <Link href={"/dashboard/create"}>
+                                <CommandItem>
+                                    <PlusIcon />
+                                    Create a new waitlist
+                                </CommandItem>
+                            </Link>
                             {waitlists.length > 0 &&
                                 waitlists.map((waitlist) => (
                                     <CommandItem key={waitlist.name}>

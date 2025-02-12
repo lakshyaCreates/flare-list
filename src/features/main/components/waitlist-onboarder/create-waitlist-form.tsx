@@ -8,14 +8,14 @@ import {
     useState,
     useTransition,
 } from "react";
-import { useForm, useFormState } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FaSpinner } from "react-icons/fa6";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
+import { useCurrentWaitlist } from "../../store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDebounce } from "@uidotdev/usehooks";
-import { debounce } from "lodash";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -32,6 +32,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { getWaitlistBySlug, createWaitlist } from "@/db/queries";
+import { Waitlists } from "@/db/schema";
 
 const createWaitlistSchema = z.object({
     name: z.string(),
@@ -46,10 +47,10 @@ interface Props {
 }
 
 export const CreateWaitlistForm = ({ setStep, userId }: Props) => {
-    const router = useRouter();
+    const { setWaitlistId, setNewState } = useCurrentWaitlist();
     const [ok, setOk] = useState(false);
     const [slug, setSlug] = useState("");
-    const debouncedSlug = useDebounce(slug, 500);
+    const debouncedSlug = useDebounce(slug, 100);
     const [slugStatus, setSlugStatus] = useState<
         "available" | "taken" | "checking" | null
     >(null);
@@ -66,15 +67,28 @@ export const CreateWaitlistForm = ({ setStep, userId }: Props) => {
 
     function onSubmit(values: CreateWaitlistSchema) {
         startTransition(async () => {
-            const data = {
+            const data: Omit<Waitlists, "id"> = {
                 ...values,
                 userId,
+                preferences: {
+                    logoType: "text",
+                    cta: "Join Waitlist",
+                    badge: "Join and get 50% off now",
+                    font: "Bricolage Grotesque",
+                    h1Weight: "extrabold",
+                    h2Weight: "semibold",
+                    pWeight: "normal",
+                    headline: "Validate your idea without writing code",
+                    inputPlaceholder: "Your email address",
+                    subtitle: "something something",
+                },
             };
 
             await createWaitlist(data).then((res) => {
                 if (res.id) {
+                    setNewState(true);
+                    setWaitlistId(res.id);
                     toast.success("Waitlist created");
-                    router.replace(`/dashboard/${res.id}`);
                     return;
                 } else {
                     toast.error("Failed to create waitlist. Try again");
@@ -95,7 +109,7 @@ export const CreateWaitlistForm = ({ setStep, userId }: Props) => {
 
         if (debouncedSlug !== "") {
             fetchSlugAvailability().then((res) => {
-                if (res || res === undefined) {
+                if (!res || res === undefined) {
                     setSlugStatus("available");
                     setOk(true);
                     return;

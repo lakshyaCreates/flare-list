@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/features/auth";
 import { WaitlistOnboarder } from "@/features/main";
 
-export default async function GetStartedSlot() {
+export default async function CreateSlotPage() {
     const user = await getCurrentUser();
     const userId = user!.id;
 
