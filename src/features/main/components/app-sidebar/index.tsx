@@ -5,7 +5,7 @@ import { LuChartArea, LuLayoutDashboard, LuPalette } from "react-icons/lu";
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
     Sidebar,
@@ -19,6 +19,7 @@ import {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const pathname = usePathname();
+    const router = useRouter();
 
     return (
         <Sidebar variant="inset" {...props}>
@@ -27,7 +28,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href="/">
-                                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <Image
                                         src={"/flare-list-icon.svg"}
                                         alt="flare list icon logo"
@@ -52,13 +53,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     {navItems.map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton
-                                asChild
-                                isActive={pathname === item.href}
+                                onClick={() => {
+                                    if (item.href === "/dashboard") {
+                                        router.push(`${item.href}`);
+                                        return;
+                                    }
+
+                                    router.push(`${pathname}${item.href}`);
+                                }}
+                                isActive={pathname.startsWith(item.href)}
                             >
-                                <Link href={item.href}>
-                                    <item.icon />
-                                    {item.title}
-                                </Link>
+                                <item.icon />
+                                {item.title}
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
