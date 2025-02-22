@@ -33,7 +33,7 @@
     --chart-3: hsl(197 37% 24%);
     --chart-4: hsl(43 74% 66%);
     --chart-5: hsl(27 87% 67%);
-    --radius: 0.6rem;
+    --radius: 0.75rem;
 }
 
 .dark {
@@ -92,6 +92,22 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
+
+    /* Custom CSS from here... */
+
+    --brand: 0 0 98%;
+    --brand-foreground: 0 0 9%;
+
+    --animate-pulsate: pulsate 1.75s ease-out infinite;
+    @keyframes pulsate {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 var(--primary/80);
+        }
+        50% {
+            box-shadow: 0 0 0 6px hsla(0, 0%, 9%, 0.6);
+        }
+    }
 }
 
 @layer base {
