@@ -15,6 +15,7 @@
         "db:studio": "drizzle-kit studio"
     },
     "dependencies": {
+        "@auth/drizzle-adapter": "^1.7.4",
         "@neondatabase/serverless": "^0.10.4",
         "@radix-ui/react-slot": "^1.1.2",
         "@t3-oss/env-nextjs": "^0.12.0",
@@ -23,6 +24,7 @@
         "drizzle-orm": "^0.39.3",
         "lucide-react": "^0.475.0",
         "next": "15.2.0-canary.64",
+        "next-auth": "^5.0.0-beta.25",
         "next-themes": "^0.4.4",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
