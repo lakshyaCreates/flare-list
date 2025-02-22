@@ -5,9 +5,11 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { ThemeSwitcher } from "./theme-switcher";
 import { signOutUser } from "@/features/auth";
 
 interface Props {
@@ -30,6 +32,8 @@ export const UserDropdown = ({ userName }: Props) => {
                     <LuCreditCard />
                     Billing
                 </DropdownMenuItem>
+                <ThemeSwitcher />
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                     <LuLogOut />
                     Sign Out
