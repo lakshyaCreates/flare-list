@@ -1,12 +1,26 @@
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const HeaderCta = async () => {
-    // Conditionally render the link based on the user's authentication status
+import { getCurrentUser } from "@/features/auth";
 
-    return <Button className="rounded-full">Get Started</Button>;
+export const HeaderCta = async () => {
+    const user = await getCurrentUser();
+
+    return (
+        <Button className="rounded-full" asChild>
+            <Link href={user ? "/dashboard" : "/login"}>
+                <span>{user ? "Dashboard" : "Get Started"}</span>
+            </Link>
+        </Button>
+    );
 };
 
 export const HeaderCtaSkeleton = () => {
-    return <Skeleton className="h-8 w-24 rounded-full" />;
+    return (
+        <Button type="button" className="rounded-full">
+            <span className="animate-pulse">Loading...</span>
+        </Button>
+    );
 };
