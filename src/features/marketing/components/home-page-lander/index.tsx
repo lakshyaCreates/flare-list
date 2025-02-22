@@ -3,6 +3,7 @@ import { Particles } from "@/components/mods/particles";
 import { AppMockup } from "./app-mockup";
 import { Header } from "./header";
 import { Hero } from "./hero";
+import { SetTheme } from "./set-theme";
 
 export const HomePageLander = () => {
     return (
@@ -18,6 +19,7 @@ export const HomePageLander = () => {
             <Header />
             <Hero />
             <AppMockup />
+            <SetTheme />
         </main>
     );
 };
