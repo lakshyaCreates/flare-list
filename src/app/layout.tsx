@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
 
+import Providers from "@/components/providers";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,7 +27,7 @@ export default function RootLayout({
             <body
                 className={`${bricolageGrotesque.variable} font-primary antialiased`}
             >
-                {children}
+                <Providers>{children}</Providers>
             </body>
         </html>
     );
