@@ -15,6 +15,13 @@
       "when": 1740227125941,
       "tag": "0001_dry_zarek",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740245763906,
+      "tag": "0002_first_turbo",
+      "breakpoints": true
     }
   ]
 }

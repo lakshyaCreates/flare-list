@@ -3,11 +3,115 @@ import type { AdapterAccountType } from "next-auth/adapters";
 import {
     boolean,
     integer,
+    json,
     pgTable,
     primaryKey,
     text,
     timestamp,
 } from "drizzle-orm/pg-core";
+import { z } from "zod";
+
+type FontWeight =
+    | "light"
+    | "normal"
+    | "medium"
+    | "semibold"
+    | "bold"
+    | "extrabold";
+
+type Templates = "modern" | "minimalistic";
+
+export type ContentData = {
+    logoType: "text" | "image";
+    logoText: string | null;
+    logoImage: string | null;
+    logoIcon: string | null;
+    logoPosition: "left" | "right";
+    font: string;
+    fontWeights: {
+        h1: FontWeight;
+        h2: FontWeight;
+        p: FontWeight;
+    };
+    template: Templates;
+    badgeText: string;
+    headline: string;
+    subtitle: string;
+    inputPlaceholder: string;
+    cta: string;
+    socialProof: string;
+    socials: {
+        x: string | null;
+        medium: string | null;
+        instagram: string | null;
+        facebook: string | null;
+        youtube: string | null;
+        linkedin: string | null;
+    };
+    successModal: {
+        title: string;
+        description: string;
+    };
+    seo: {
+        title: string;
+        description: string;
+    };
+};
+
+export const contentData = z.custom<ContentData>();
+
+export const waitlists = pgTable("waitlist", {
+    id: text("id")
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    slug: text("slug").unique(),
+    userId: text("userId")
+        .notNull()
+        .references(() => users.id, { onDelete: "cascade" }),
+    content: json()
+        .$type<ContentData>()
+        .notNull()
+        .default({
+            logoType: "text",
+            logoText: "",
+            logoImage: null,
+            logoIcon: "",
+            logoPosition: "left",
+            font: "",
+            fontWeights: {
+                h1: "extrabold",
+                h2: "semibold",
+                p: "normal",
+            },
+            template: "modern",
+            badgeText: "Sign up now and get 50% off at launch",
+            headline: "Software that sparks your imagination",
+            subtitle:
+                "Unleash your creativity with our innovative software. From concept to creation, we provide the tools you need to bring your ideas to life.",
+            inputPlaceholder: "Your email",
+            cta: "Join The Waitlist",
+            socialProof: "Join 2,146 others waiting for the best app ever!",
+            socials: {
+                x: "https://x.com/yourcompany",
+                instagram: "https://instagram.com/your_username",
+                facebook: null,
+                medium: null,
+                youtube: null,
+                linkedin: null,
+            },
+            successModal: {
+                title: "Thank your for joining",
+                description: "Have some questions? Feel free to reach out!",
+            },
+            seo: {
+                title: "Join waitlist",
+                description: "Be the first to know when we launch",
+            },
+        }),
+});
+
+export type Waitlist = typeof waitlists.$inferSelect;
 
 export const users = pgTable("user", {
     id: text("id")
@@ -18,6 +122,8 @@ export const users = pgTable("user", {
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
 });
+
+export type User = typeof users.$inferSelect;
 
 export const accounts = pgTable(
     "account",
