@@ -8,6 +8,13 @@
       "when": 1740208414564,
       "tag": "0000_gigantic_iron_fist",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740227125941,
+      "tag": "0001_dry_zarek",
+      "breakpoints": true
     }
   ]
 }
