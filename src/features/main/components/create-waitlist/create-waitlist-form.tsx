@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { FaSpinner } from "react-icons/fa6";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDebounce } from "@uidotdev/usehooks";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +20,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { useSlugStatus } from "./use-slug-status";
+
 interface Props {
     children: React.ReactNode;
 }
@@ -30,6 +34,14 @@ const createWaitlistSchema = z.object({
 type CreateWaitlistSchema = z.infer<typeof createWaitlistSchema>;
 
 export const CreateWaitlistForm = ({ children }: Props) => {
+    const [ok, setOk] = useState(false);
+    const [slug, setSlug] = useState("");
+
+    const debouncedSlug = useDebounce(slug, 100);
+    const slugStatus = useSlugStatus(debouncedSlug);
+
+    const [isPending, startTransition] = useTransition();
+
     const form = useForm<CreateWaitlistSchema>({
         resolver: zodResolver(createWaitlistSchema),
         defaultValues: {
@@ -37,6 +49,22 @@ export const CreateWaitlistForm = ({ children }: Props) => {
             slug: "",
         },
     });
+
+    useEffect(() => {
+        console.log(slugStatus);
+
+        if (slugStatus === "available") {
+            setOk(true);
+        } else {
+            setOk(false);
+        }
+    }, [slugStatus]);
+
+    useEffect(() => {
+        if (slug === "") {
+            setOk(false);
+        }
+    }, [slug]);
 
     function onSubmit(values: CreateWaitlistSchema) {}
 
@@ -73,6 +101,9 @@ export const CreateWaitlistForm = ({ children }: Props) => {
                                         flare-list.vercel.app/
                                     </span>
                                     <Input
+                                        onChangeCapture={(e) => {
+                                            setSlug(e.currentTarget.value);
+                                        }}
                                         className="-ms-px rounded-s-none shadow-none"
                                         placeholder="ship-fast"
                                         type="text"
@@ -81,6 +112,26 @@ export const CreateWaitlistForm = ({ children }: Props) => {
                                 </div>
                             </FormControl>
                             <FormDescription>
+                                {slugStatus === "checking" && (
+                                    <span className="flex items-center gap-1">
+                                        <FaSpinner className="animate-spin" />
+                                        Checking availability...
+                                    </span>
+                                )}
+
+                                {slugStatus === "taken" && (
+                                    <span className="text-red-600">
+                                        This URL is already taken
+                                    </span>
+                                )}
+
+                                {slugStatus === "available" && (
+                                    <span className="text-emerald-600">
+                                        This URL is available
+                                    </span>
+                                )}
+                            </FormDescription>
+                            <FormDescription>
                                 You can add a custom domain later
                             </FormDescription>
                             <FormMessage />
@@ -88,7 +139,9 @@ export const CreateWaitlistForm = ({ children }: Props) => {
                     )}
                 />
                 <div className="flex items-center gap-2">
-                    <Button type="submit">Create Waitlist</Button>
+                    <Button type="submit" disabled={!ok || isPending}>
+                        Create Waitlist
+                    </Button>
                     {children}
                 </div>
             </form>
