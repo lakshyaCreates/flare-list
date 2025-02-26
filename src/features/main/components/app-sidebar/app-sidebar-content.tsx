@@ -1,7 +1,7 @@
 import { IoSettingsOutline } from "react-icons/io5";
 import { LuChartArea, LuLayoutDashboard, LuPalette } from "react-icons/lu";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 import {
     SidebarContent,
@@ -35,6 +35,7 @@ const navItems = [
 
 export const AppSidebarContent = () => {
     const pathname = usePathname();
+    const { id } = useParams();
     const router = useRouter();
 
     return (
@@ -51,19 +52,20 @@ export const AppSidebarContent = () => {
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton
                                 onClick={() => {
-                                    if (
-                                        pathname === "/dashboard" ||
-                                        !pathname.endsWith(item.href)
-                                    ) {
+                                    if (id) {
                                         if (item.href === "/dashboard") {
-                                            router.push(`${item.href}`);
+                                            router.push(`/dashboard/${id}`);
                                             return;
                                         }
 
-                                        router.push(`${pathname}${item.href}`);
+                                        router.push(
+                                            `/dashboard/${id}/${item.href}`,
+                                        );
+                                        return;
                                     }
                                 }}
                                 isActive={isActive}
+                                disabled={!id}
                             >
                                 <item.icon />
                                 {item.title}
