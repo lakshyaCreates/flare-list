@@ -1,11 +1,13 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { FaSpinner } from "react-icons/fa6";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDebounce } from "@uidotdev/usehooks";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -37,10 +39,14 @@ export const CreateWaitlistForm = ({ children }: Props) => {
     const [ok, setOk] = useState(false);
     const [slug, setSlug] = useState("");
 
-    const debouncedSlug = useDebounce(slug, 100);
+    const debouncedSlug = useDebounce(slug, 200);
     const slugStatus = useSlugStatus(debouncedSlug);
 
     const [isPending, startTransition] = useTransition();
+
+    const { data: session } = useSession();
+    const user = session!.user;
+    const userId = user!.id;
 
     const form = useForm<CreateWaitlistSchema>({
         resolver: zodResolver(createWaitlistSchema),
@@ -51,8 +57,6 @@ export const CreateWaitlistForm = ({ children }: Props) => {
     });
 
     useEffect(() => {
-        console.log(slugStatus);
-
         if (slugStatus === "available") {
             setOk(true);
         } else {
@@ -66,7 +70,27 @@ export const CreateWaitlistForm = ({ children }: Props) => {
         }
     }, [slug]);
 
-    function onSubmit(values: CreateWaitlistSchema) {}
+    function onSubmit(values: CreateWaitlistSchema) {
+        startTransition(async () => {
+            const data = { ...values, userId };
+
+            const waitlistId: string | null = await fetch(
+                "/api/create-waitlist",
+                {
+                    method: "POST",
+                    body: JSON.stringify({ data }),
+                },
+            ).then(async (r) => r.json());
+
+            if (waitlistId !== null) {
+                toast.success("Waitlist created!");
+                return;
+            } else {
+                toast.error("Failed to create waitlist");
+                return;
+            }
+        });
+    }
 
     return (
         <Form {...form}>

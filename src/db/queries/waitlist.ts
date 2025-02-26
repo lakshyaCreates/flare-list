@@ -18,13 +18,20 @@ export async function getUserWaitlists(userId: string): Promise<Waitlist[]> {
         .where(eq(waitlists.userId, userId));
 }
 
-export async function getWaitlistBySlug(
-    slug: string,
-    userId: string,
-): Promise<Waitlist> {
+export async function getWaitlistBySlug(slug: string): Promise<Waitlist> {
     return await db
         .select()
         .from(waitlists)
-        .where(and(eq(waitlists.slug, slug), eq(waitlists.userId, userId)))
+        .where(eq(waitlists.slug, slug))
+        .then((res) => res[0]);
+}
+
+export async function createWaitlist(
+    data: Omit<Waitlist, "id" | "content">,
+): Promise<Pick<Waitlist, "id">> {
+    return await db
+        .insert(waitlists)
+        .values(data)
+        .returning({ id: waitlists.id })
         .then((res) => res[0]);
 }

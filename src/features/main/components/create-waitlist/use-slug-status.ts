@@ -20,18 +20,14 @@ export function useSlugStatus(slug: string) {
                 throw new Error("slug is empty");
             }
 
-            const response = await fetch(`/api/waitlist`, {
-                method: "POST",
-                body: JSON.stringify({
-                    slug,
-                    userId,
-                }),
-            });
+            const response = await fetch(
+                `/api/fetch-waitlist/by-slug?slug=${slug}`,
+            );
 
             const data = await response.json();
-            const waitlist = data.response;
+            const waitlist = data.waitlist;
 
-            if (!waitlist) {
+            if (waitlist === null) {
                 setSlugStatus("available");
             } else {
                 setSlugStatus("taken");
