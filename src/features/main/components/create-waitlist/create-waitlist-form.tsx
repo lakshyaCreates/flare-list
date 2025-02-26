@@ -5,6 +5,8 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { FaSpinner } from "react-icons/fa6";
 
+import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDebounce } from "@uidotdev/usehooks";
 import { toast } from "sonner";
@@ -36,6 +38,8 @@ const createWaitlistSchema = z.object({
 type CreateWaitlistSchema = z.infer<typeof createWaitlistSchema>;
 
 export const CreateWaitlistForm = ({ children }: Props) => {
+    const router = useRouter();
+
     const [ok, setOk] = useState(false);
     const [slug, setSlug] = useState("");
 
@@ -45,8 +49,7 @@ export const CreateWaitlistForm = ({ children }: Props) => {
     const [isPending, startTransition] = useTransition();
 
     const { data: session } = useSession();
-    const user = session!.user;
-    const userId = user!.id;
+    const userId = session?.user?.id;
 
     const form = useForm<CreateWaitlistSchema>({
         resolver: zodResolver(createWaitlistSchema),
@@ -74,7 +77,7 @@ export const CreateWaitlistForm = ({ children }: Props) => {
         startTransition(async () => {
             const data = { ...values, userId };
 
-            const waitlistId: string | null = await fetch(
+            const response: { waitlistId: string | null } = await fetch(
                 "/api/create-waitlist",
                 {
                     method: "POST",
@@ -82,8 +85,11 @@ export const CreateWaitlistForm = ({ children }: Props) => {
                 },
             ).then(async (r) => r.json());
 
+            const waitlistId = response.waitlistId;
+
             if (waitlistId !== null) {
                 toast.success("Waitlist created!");
+                router.push(`/dashboard/${waitlistId}`);
                 return;
             } else {
                 toast.error("Failed to create waitlist");

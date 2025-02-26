@@ -37,14 +37,16 @@ export const CreateWaitlist = ({ onboard }: Props) => {
                     </p>
                 ) : (
                     <CreateWaitlistForm>
-                        <Button
-                            onClick={() => {
-                                setStep(0);
-                            }}
-                            variant={"outline"}
-                        >
-                            Back
-                        </Button>
+                        {onboard && step == 0 && (
+                            <Button
+                                onClick={() => {
+                                    setStep(0);
+                                }}
+                                variant={"outline"}
+                            >
+                                Back
+                            </Button>
+                        )}
                     </CreateWaitlistForm>
                 )}
             </CardContent>
